@@ -22,7 +22,14 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 var lightbox = new SimpleLightbox('.gallery a', {
-  /* options */
+  sourceAttr: 'href',
+  captionsData: 'alt',
+  captionPosition: 'bottom',
+  captionDelay: 250,
+  animationSpeed: 250,
+  fadeSpeed: 300,
+  showCounter: true,
+  // alte opțiuni pot fi adăugate aici
 });
 
 loadMoreButton.style.display = 'none';
