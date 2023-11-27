@@ -1,99 +1,119 @@
-# Parcel template
+Căutarea imaginilor:
 
-Этот проект был создан при помощи Parcel. Для знакомства и настройки
-дополнительных возможностей [обратись к документации](https://parceljs.org/).
+Proiectul este construit cu ajutorul parcel-project-template.
+Pentru cererile HTTP este folosită librăria axios.
+Este folosită sintaxa async/await.
+Pentru notificări este folosită librăria notiflix.
+Codul este formatat de Prettier.
 
-## Подготовка нового проекта
+Creați partea de front-end a unei aplicații care va căuta și vizualizați imaginile după un cuvânt cheie. Adăugați stiluri pentru elementele din interfață. Urmăriți filmulețul demonstrativ al aplicației.
 
-1. Убедись что на компьютере установлена LTS-версия Node.js.
-   [Скачай и установи](https://nodejs.org/en/) её если необходимо.
-2. Склонируй этот репозиторий.
-3. Измени имя папки с `parcel-project-template` на имя своего проекта.
-4. Создай новый пустой репозиторий на GitHub.
-5. Открой проект в VSCode, запусти терминал и свяжи проект с GitHub-репозиторием
-   [по инструкции](https://docs.github.com/en/get-started/getting-started-with-git/managing-remote-repositories#changing-a-remote-repositorys-url).
-6. Установи зависимости проекта в терминале командой `npm install` .
-7. Запусти режим разработки, выполнив команду `npm start`.
-8. Перейди в браузере по адресу [http://localhost:1234](http://localhost:1234).
-   Эта страница будет автоматически перезагружаться после сохранения изменений в
-   файлах проекта.
+Formularul de căutare:
+Inițial, formularul se află în documentul HTML. Utilizatorul va introduce un text în câmpul de căutare, iar la trimiterea formularului, se va executa o solicitare HTTP.
 
-## Файлы и папки
+<form class="search-form" id="search-form">
+  <input
+    type="text"
+    name="searchQuery"
+    autocomplete="off"
+    placeholder="Search images..."
+  />
+  <button type="submit">Search</button>
+</form>
 
-- Все паршалы файлов стилей должны лежать в папке `src/sass` и импортироваться в
-  файлы стилей страниц. Например, для `index.html` файл стилей называется
-  `index.scss`.
-- Изображения добавляй в папку `src/images`. Сборщик оптимизирует их, но только
-  при деплое продакшн версии проекта. Все это происходит в облаке, чтобы не
-  нагружать твой компьютер, так как на слабых машинах это может занять много
-  времени.
+HTTP requests:
+Folosiți API-ul public de la Pixabay în calitate de back-end. Înregistrați-vă, obțineți o cheie unică de acces și citiți documentația.
 
-## Деплой
+Lista parametrilor de interogare pe care trebuie să îi specificați sunt:
 
-Для настройки деплоя проекта необходимо выполнить несколько дополнительных шагов
-по настройке твоего репозитория. Зайди во вкладку `Settings` и в подсекции
-`Actions` выбери выбери пункт `General`.
+key - cheia dvs. unică de acces la API.
+q - valoarea pe care o va introduce utilizatorul.
+image_type - tipul imaginii. Avem nevoie doar de fotografii, așa că setați valoarea photo.
+orientation - orientarea fotografiei. Setați valoarea horizontal.
+safesearch - se filtrează după vârstă. Setați valoarea true.
+Răspunsul va conține o matrice de imagini care îndeplinesc criteriile parametrilor de interogare. Fiecare imagine este descrisă de un obiect, din care avem nevoie doar de următoarele proprietăți:
 
-![GitHub actions settings](./assets/actions-config-step-1.png)
+webformatURL - un link către imaginea mică.
+largeImageURL - un link către imaginea mare.
+tags - un text care descrie imaginea, potrivit pentru atribut alt.
+likes - numărul de like-uri.
+views - numărul de vizualizări.
+comments - numărul de comentarii.
+downloads - numărul de descărcări.
+Dacă backend-ul returnează o matrice goală, înseamnă că nu a fost găsit nimic. În acest caz, afișează o notificare cu textul: "Sorry, there are no images matching your search query. Please try again.". Pentru notificări folosiți librăria notiflix.
 
-Пролистай страницу до последней секции, в которой убедись что выбраны опции как
-на следующем изображении и нажми `Save`. Без этих настроек у сборки будет
-недостаточно прав для автоматизации процесса деплоя.
+Galerie și carduri de imagini:
+Există deja elementul div.gallery în documentul HTML unde trebuie să introducem marcajul cardurilor de imagini. Când se caută un nou cuvânt cheie, trebuie să ștergeți complet conținutul galeriei pentru a nu amesteca rezultatele.
 
-![GitHub actions settings](./assets/actions-config-step-2.png)
+<div class="gallery">
+  <!--Carduri cu imagini -->
+</div>
 
-Продакшн версия проекта будет автоматически собираться и деплоиться на GitHub
-Pages, в ветку `gh-pages`, каждый раз когда обновляется ветка `main`. Например,
-после прямого пуша или принятого пул-реквеста. Для этого необходимо в файле
-`package.json` отредактировать поле `homepage` и скрипт `build`, заменив
-`your_username` и `your_repo_name` на свои, и отправить изменения на GitHub.
+Mai jos este specificat un șablon de card cu o singură imagine pentru o galerie.
 
-```json
-"homepage": "https://your_username.github.io/your_repo_name/",
-"scripts": {
-  "build": "parcel build src/*.html --public-url /your_repo_name/"
-},
-```
+<div class="photo-card">
+  <img src="" alt="" loading="lazy" />
+  <div class="info">
+    <p class="info-item">
+      <b>Likes</b>
+    </p>
+    <p class="info-item">
+      <b>Views</b>
+    </p>
+    <p class="info-item">
+      <b>Comments</b>
+    </p>
+    <p class="info-item">
+      <b>Downloads</b>
+    </p>
+  </div>
+</div>
 
-Далее необходимо зайти в настройки GitHub-репозитория (`Settings` > `Pages`) и
-выставить раздачу продакшн версии файлов из папки `/root` ветки `gh-pages`, если
-это небыло сделано автоматически.
+Paginarea:
+Pixabay API acceptă paginarea și oferă suport prin parametri page și per_page. Faceți astfel încât să apară 40 de obiecte în fiecare răspuns (20 este implicit).
 
-![GitHub Pages settings](./assets/repo-settings.png)
+Inițial, valoarea parametrului page trebuie să fie 1.
+Cu fiecare cerere ulterioară, aceasta trebuie mărită cu 1.
+La căutarea unui nou cuvânt cheie, valoarea page trebuie să fie returnată la valoarea inițială, deoarece se va implementa paginarea pentru colecția nouă de imagini.
+Documentul HTML are deja elementul butonului. Atunci când se dă click, este necesar să se execute o solicitare pentru următorul grup de imagini și să adăugați un card de imagine la elementele galeriei deja existente.
 
-### Статус деплоя
+<button type="button" class="load-more">Load more</button>
 
-Статус деплоя крайнего коммита отображается иконкой возле его идентификатора.
+Inițial, butonul trebuie ascuns.
+După prima solicitare, butonul apare în interfață, sub galerie.
+Când formularul este retrimis, butonul este mai întâi ascuns, iar după solicitare este din nou afișat.
+În răspunsul din back-end, se returnează proprietatea totalHits - numărul total de imagini care corespund criteriilor de căutare (pentru un cont gratuit). Dacă utilizatorul a ajuns la sfârșitul colecției, ascundeți butonul și afișați o notificare cu textul: "We're sorry, but you've reached the end of search results.".
 
-- **Желтый цвет** - выполняется сборка и деплой проекта.
-- **Зеленый цвет** - деплой завершился успешно.
-- **Красный цвет** - во время линтинга, сборки или деплоя произошла ошибка.
+Suplimentar:
+ATENȚIE
+Această funcționalitate nu este necesară la trimiterea acestui task, dar va fi un exercițiu suplimentar destul de bun.
 
-Более детальную информацию о статусе можно посмотреть кликнув по иконке, и в
-выпадающем окне перейти по ссылке `Details`.
+Notificarea
+După prima solicitare, pentru fiecare nouă căutare, se va afișa o notificare în care se va scrie câte imagini au fost găsite în total (proprietatea totalHits). Textul notificării va fi: "Hooray! We found totalHits images."
 
-![Deployment status](./assets/status.png)
+Librăria SimpleLightbox
+Adăugați posibilitatea de afișare a unei versiuni mari a imaginei cu ajutorul librăriei SimpleLightbox pentru a simula funcționalitatea unei galerii complete.
 
-### Живая страница
+În marcaj, va fi necesar să împachetați fiecare card de imagine într-un link, așa cum este indicat în documentație.
+Librăria are o metodă refresh(), care trebuie apelată de fiecare dată după adăugarea unui nou grup de carduri cu imagini.
+Pentru a conecta codul CSS al librăriei la proiect, trebuie să adăugați încă un import pe lângă cel descris în documentație.
 
-Через какое-то время, обычно пару минут, живую страницу можно будет посмотреть
-по адресу указанному в отредактированном свойстве `homepage`. Например, вот
-ссылка на живую версию для этого репозитория
-[https://goitacademy.github.io/parcel-project-template](https://goitacademy.github.io/parcel-project-template).
+// Descris în documentație
+import SimpleLightbox from "simplelightbox";
+// Import suplimentar de stil
+import "simplelightbox/dist/simple-lightbox.min.css";
 
-Если открывается пустая страница, убедись что во вкладке `Console` нет ошибок
-связанных с неправильными путями к CSS и JS файлам проекта (**404**). Скорее
-всего у тебя неправильное значение свойства `homepage` или скрипта `build` в
-файле `package.json`.
+Derularea paginii:
+Implementați un scroll fluid al paginii după solicitare și redarea fiecărui grup următor de imagini. Iată un cod-indiciu, dar încercați să-l înțelegeți de sine stătător.
 
-## Как это работает
+const { height: cardHeight } = document
+  .querySelector(".gallery")
+  .firstElementChild.getBoundingClientRect();
 
-![How it works](./assets/how-it-works.png)
+window.scrollBy({
+  top: cardHeight * 2,
+  behavior: "smooth",
+});
 
-1. После каждого пуша в ветку `main` GitHub-репозитория, запускается специальный
-   скрипт (GitHub Action) из файла `.github/workflows/deploy.yml`.
-2. Все файлы репозитория копируются на сервер, где проект инициализируется и
-   проходит сборку перед деплоем.
-3. Если все шаги прошли успешно, собранная продакшн версия файлов проекта
-   отправляется в ветку `gh-pages`. В противном случае, в логе выполнения
-   скрипта будет указано в чем проблема.
+Infinite scrolling:
+În locul butonului "Load more", se poate face o încărcare nesfârșită a imaginilor atunci când se derulează pagina. Aveți totală libertate în implementare, puteți folosi orice librărie doriți.
