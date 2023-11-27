@@ -9,12 +9,21 @@ const inputField = document.querySelector('.search-form-input');
 const imageGallery = document.querySelector('.gallery');
 const loadMoreButton = document.querySelector('.load-more');
 
+let currentPageNumber = 1;
+let itemsPerPage = 40;
+
+document.addEventListener('DOMContentLoaded', () => {
+  const searchInput = document.querySelector('.search-form-input');
+  searchInput.addEventListener('click', function () {
+    if (this.value !== '') {
+      this.value = '';
+    }
+  });
+});
+
 var lightbox = new SimpleLightbox('.gallery a', {
   /* options */
 });
-
-let currentPageNumber = 1;
-let itemsPerPage = 40;
 
 loadMoreButton.style.display = 'none';
 
